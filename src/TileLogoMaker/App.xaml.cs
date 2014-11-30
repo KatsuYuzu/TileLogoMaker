@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using KatsuYuzu.TileLogoMaker.Models;
+using KatsuYuzu.TileLogoMaker.ViewModels;
+using KatsuYuzu.TileLogoMaker.Views;
+using System.Reflection;
+using System.Windows;
 
 namespace KatsuYuzu.TileLogoMaker
 {
@@ -7,5 +11,22 @@ namespace KatsuYuzu.TileLogoMaker
     /// </summary>
     public partial class App : Application
     {
+        public static readonly ApplicationContext Context;
+
+        static App()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var productInfo = new ProductInfo(assembly);
+            Context = new ApplicationContext(productInfo);
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            var vm = new MainWindowViewModel(Context);
+            MainWindow = new MainWindow { DataContext = vm };
+            MainWindow.Show();
+        }
     }
 }

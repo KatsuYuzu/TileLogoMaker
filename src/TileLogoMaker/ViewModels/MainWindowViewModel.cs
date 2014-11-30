@@ -1,36 +1,69 @@
 ﻿using Codeplex.Reactive;
+using Codeplex.Reactive.Extensions;
 using KatsuYuzu.TileLogoMaker.Models;
 using System;
+using System.Linq;
 using System.Reactive.Linq;
-using System.Reflection;
+using System.Windows;
 
 namespace KatsuYuzu.TileLogoMaker.ViewModels
 {
     public class MainWindowViewModel
     {
-        public MainWindowViewModel()
+        private readonly ApplicationContext _appContext;
+
+        public MainWindowViewModel(ApplicationContext appContext)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var product = new ProductInfo(assembly);
+            _appContext = appContext;
 
-            Title = new ReactiveProperty<string>(product.Product);
+            Title =
+                _appContext.ProductInfo.Product
+                + " - "
+                + _appContext.ProductInfo.Version + "（アルファ）";
 
-            ClickCommand = new ReactiveCommand();
+            BrowseFileCommand = new ReactiveCommand();
+            BrowseFileCommand.Subscribe(_ => _appContext.BrowseFile());
 
-            var clear = ClickCommand
-                .Delay(TimeSpan.FromSeconds(2))
-                .Select(_ => false);
+            SaveCommand = _appContext
+                .ObserveProperty(x => x.CanSave)
+                .ToReactiveCommand();
+            SaveCommand.Subscribe(_ => _appContext.Save());
 
-            Status = ClickCommand
-                .Select(_ => true)
-                .Merge(clear)
-                .Select(x => x ? "ボタンが押されました" : product.Version)
-                .ToReactiveProperty(product.Version);
+            Image = _appContext
+                .ObserveProperty(x => x.Material)
+                .Where(x => x != null)
+                .Select(x => x.Image)
+                .ToReactiveProperty();
+
+            ErrorMessage = _appContext
+                .ObserveProperty(x => x.Material)
+                .Where(x => x != null)
+                .Select(x => x.ErrorMessages.FirstOrDefault())
+                .ToReactiveProperty();
+
+            SelectedFile = _appContext
+                .ObserveProperty(x => x.Material)
+                .Where(x => x != null)
+                .Select(x => x.Path)
+                .ToReactiveProperty();
+
+            Status = SelectedFile
+                .Where(x => x != null)
+                .Select(x => @"""" + SelectedFile.Value + @""" が開かれました")
+                .Merge(SaveCommand.Select(_ => "ロゴが保存されました"))
+                .ToReactiveProperty("[素材を開く] をクリックしてください");
         }
 
-        public ReactiveProperty<string> Title { get; private set; }
+        public string Title { get; private set; }
         public ReactiveProperty<string> Status { get; private set; }
 
-        public ReactiveCommand ClickCommand { get; private set; }
+        public ReactiveProperty<UIElement> Image { get; private set; }
+        public ReactiveProperty<string> ErrorMessage { get; private set; }
+
+        public ReactiveProperty<string> SelectedFile { get; private set; }
+
+        public ReactiveCommand BrowseFileCommand { get; private set; }
+
+        public ReactiveCommand SaveCommand { get; private set; }
     }
 }
