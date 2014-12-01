@@ -4,7 +4,7 @@ namespace KatsuYuzu.TileLogoMaker.Models
     /// <summary>
     /// ロゴ情報を表します。
     /// </summary>
-    class LogoInfo
+    public class LogoInfo
     {
         /// <summary>
         /// 名前を取得または設定します。

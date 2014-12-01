@@ -17,7 +17,7 @@ namespace KatsuYuzu.TileLogoMaker
         {
             var assembly = Assembly.GetExecutingAssembly();
             var productInfo = new ProductInfo(assembly);
-            Context = new ApplicationContext(productInfo);
+            Context = new ApplicationContext(productInfo, new Settings());
         }
 
         protected override void OnStartup(StartupEventArgs e)

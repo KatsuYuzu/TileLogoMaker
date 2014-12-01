@@ -9,8 +9,11 @@ namespace KatsuYuzu.TileLogoMaker.Models
 {
     public class ApplicationContext : INotifyPropertyChanged
     {
-        public ApplicationContext(ProductInfo productInfo)
+        private readonly Settings _settings;
+
+        public ApplicationContext(ProductInfo productInfo, Settings settings)
         {
+            _settings = settings;
             ProductInfo = productInfo;
         }
 
@@ -65,102 +68,7 @@ namespace KatsuYuzu.TileLogoMaker.Models
                 throw new InvalidOperationException();
             }
 
-            // TODO: 設定ファイル化（設定次第で他プラットフォームのアイコンに対応）
-            var logos = new[]
-            {
-                new LogoInfo
-                {
-                    SubDirectoryName = "Windows 8.1", 
-                    Name = "Square70x70Logo", 
-                    Width = 70, 
-                    Height = 70,
-                    OffsetY = 0,
-                    LogoScale = 0.7,
-                    SupportedTileScales = TileScales.All
-                },
-                new LogoInfo
-                {
-                    SubDirectoryName = "Windows 8.1", 
-                    Name = "Logo", 
-                    Width = 150, 
-                    Height = 150,
-                    OffsetY = 0,
-                    LogoScale = 0.7,
-                    SupportedTileScales = TileScales.All
-                },
-                new LogoInfo
-                {
-                    SubDirectoryName = "Windows 8.1", 
-                    Name = "Wide310x150Logo", 
-                    Width = 310, 
-                    Height = 150,
-                    OffsetY = 0,
-                    LogoScale = 0.7,
-                    SupportedTileScales = TileScales.All
-                },
-                new LogoInfo
-                {
-                    SubDirectoryName = "Windows 8.1", 
-                    Name = "Square150x150Logo", 
-                    Width = 150, 
-                    Height = 150,
-                    OffsetY = 0,
-                    LogoScale = 0.7,
-                    SupportedTileScales = TileScales.All
-                },
-                new LogoInfo
-                {
-                    SubDirectoryName = "Windows 8.1", 
-                    Name = "Square310x310Logo", 
-                    Width = 310, 
-                    Height = 310,
-                    OffsetY = 0,
-                    LogoScale = 0.7,
-                    SupportedTileScales = TileScales.All
-                },
-                new LogoInfo
-                {
-                    SubDirectoryName = "Windows 8.1", 
-                    Name = "SmallLogo", 
-                    Width = 30, 
-                    Height = 30,
-                    OffsetY = 0,
-                    LogoScale = 0.7,
-                    SupportedTileScales = TileScales.All
-                },
-                new LogoInfo
-                {
-                    SubDirectoryName = "Windows 8.1", 
-                    Name = "StoreLogo", 
-                    Width = 50, 
-                    Height = 50,
-                    OffsetY = 0,
-                    LogoScale = 0.7,
-                    SupportedTileScales = TileScales.GreaterThan100
-                },
-                new LogoInfo
-                {
-                    SubDirectoryName = "Windows 8.1", 
-                    Name = "LockScreen", 
-                    Width = 24, 
-                    Height = 24,
-                    OffsetY = 0,
-                    LogoScale = 0.7,
-                    SupportedTileScales = TileScales.GreaterThan100
-                },
-                new LogoInfo
-                {
-                    SubDirectoryName = "Windows 8.1", 
-                    Name = "SplashScreen", 
-                    Width = 620, 
-                    Height = 300,
-                    OffsetY = 0,
-                    LogoScale = 0.7,
-                    SupportedTileScales = TileScales.GreaterThan100
-                },
-            };
-
-            foreach (var logo in logos)
+            foreach (var logo in _settings.Logos)
             {
                 Material.Image.Save(RootDirectory, logo);
             }

@@ -3,7 +3,7 @@
 namespace KatsuYuzu.TileLogoMaker.Models
 {
     [Flags]
-    enum TileScales
+    public enum TileScales
     {
         Percent100 = 1,
         Percent80 = 2,

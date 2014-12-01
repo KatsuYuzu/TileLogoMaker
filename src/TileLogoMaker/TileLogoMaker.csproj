@@ -113,6 +113,7 @@
     <Compile Include="Models\Material.cs" />
     <Compile Include="Models\ProductInfo.cs" />
     <Compile Include="Models\AssemblyInfo.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\TileScales.cs" />
     <Compile Include="Models\UIElementExtensions.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
